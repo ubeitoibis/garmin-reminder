@@ -53,7 +53,7 @@ jobs:
 if latest:
     with open(latest, 'r', encoding='utf-8') as f:
         data = json.load(f)
-    total = data.get('sleep_summary', {}).get('total_sleep', 0)
+              total = data.get('sleep_summary', {}).get('total_sleep', 0)
     if total >= 25200:
         tone_type = 'gentle'
     elif total >= 18000:
