@@ -17,6 +17,11 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Check Python version and random module
+        run: |
+          python --version
+          python -c "import random; print(random.choice([1, 2, 3]))"
+
       - name: Install ICS module
         run: pip install ics
 
