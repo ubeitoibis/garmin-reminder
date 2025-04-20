@@ -1,4 +1,4 @@
-name: Safe Daily Reminder
+name: Safe Daily Reminder with Full Phrases
 
 on:
   workflow_dispatch:
@@ -12,27 +12,133 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Create reminder script
+      - name: Create mock sleep data
         run: |
+          mkdir -p processed
+          echo '{
+            "date": "2025-04-20",
+            "sleep_summary": {
+              "deep": 12300,
+              "light": 22920,
+              "rem": 7260,
+              "awake": 12360,
+              "total_sleep": 54840
+            }
+          }' > processed/mock_sleep.json
+
+      - name: Write reminder script
+        run: |
+          echo "import os, json, glob" >> reminder.py
+          echo "from datetime import datetime" >> reminder.py
           echo "import random" >> reminder.py
-          echo "import datetime" >> reminder.py
-          echo "tone_type = 'gentle'" >> reminder.py
-          echo "task = 'brush'" >> reminder.py
+          echo "" >> reminder.py
+          echo "files = sorted(glob.glob('processed/*.json'), key=os.path.getmtime, reverse=True)" >> reminder.py
+          echo "latest = files[0] if files else None" >> reminder.py
+          echo "" >> reminder.py
+          echo "tone_type = ''" >> reminder.py
+          echo "if latest:" >> reminder.py
+          echo "    with open(latest, 'r', encoding='utf-8') as f:" >> reminder.py
+          echo "        data = json.load(f)" >> reminder.py
+          echo "        total = data.get('sleep_summary', {}).get('total_sleep', 0)" >> reminder.py
+          echo "    if total >= 25200:" >> reminder.py
+          echo "        tone_type = 'gentle'" >> reminder.py
+          echo "    elif total >= 18000:" >> reminder.py
+          echo "        tone_type = 'neutral'" >> reminder.py
+          echo "    else:" >> reminder.py
+          echo "        tone_type = 'concerned'" >> reminder.py
+          echo "" >> reminder.py
+          echo "now = datetime.utcnow().strftime('%H:%M')" >> reminder.py
+          echo "if now in ['23:00', '00:00', '12:00']:" >> reminder.py
+          echo "    task = 'brush'" >> reminder.py
+          echo "elif now in ['10:45', '01:30']:" >> reminder.py
+          echo "    task = 'exercise'" >> reminder.py
+          echo "else:" >> reminder.py
+          echo "    task = 'unknown'" >> reminder.py
+          echo "" >> reminder.py
           echo "reminders = {" >> reminder.py
-          echo "  'brush': {" >> reminder.py
-          echo "    'gentle': ['開始一天之前，先讓口氣也醒來 ✦']," >> reminder.py
-          echo "    'neutral': ['去刷個牙再開始你要做的事吧！']," >> reminder.py
-          echo "    'concerned': ['情緒跟不上也沒關係，刷牙當作切換模式']" >> reminder.py
-          echo "  }," >> reminder.py
-          echo "  'exercise': {" >> reminder.py
-          echo "    'gentle': ['今天不用多，三分鐘踏步也夠意思 ✦']," >> reminder.py
-          echo "    'neutral': ['你可以做到的，來～走起來吧']," >> reminder.py
-          echo "    'concerned': ['三分鐘可以嗎？只是簡單讓身體動起來']" >> reminder.py
-          echo "  }" >> reminder.py
+          echo "    'brush': {" >> reminder.py
+          echo "        'gentle': [" >> reminder.py
+          echo "            '開始一天之前，先讓口氣也醒來 ✦'," >> reminder.py
+          echo "            '出門之前的儀式：來～去刷個牙吧！'," >> reminder.py
+          echo "            '讓嘴巴清爽一點，才有心情開始今天的事 ✧'," >> reminder.py
+          echo "            '精神恢復之前，先把牙齒清乾淨 ♡'," >> reminder.py
+          echo "            '睡飽飽後來點泡沫，感覺會很清新～'," >> reminder.py
+          echo "            '早上清爽的第一步，就是刷牙'," >> reminder.py
+          echo "            '牙齒清乾淨，心情也比較輕盈～'," >> reminder.py
+          echo "            '幫自己開啟清潔模式吧 ✦'," >> reminder.py
+          echo "            '別忘了幫口氣也準備好今天的冒險'," >> reminder.py
+          echo "            '清潔的起點，是今天的第一個小照顧'" >> reminder.py
+          echo "        ]," >> reminder.py
+          echo "        'neutral': [" >> reminder.py
+          echo "            '早晚刷牙，讓自己維持清新節奏 ✧'," >> reminder.py
+          echo "            '不管今天怎麼樣，口氣乾淨先拿到'," >> reminder.py
+          echo "            '去刷個牙再開始你要做的事吧！'," >> reminder.py
+          echo "            '口腔清潔完就可以進入下一段行程 ✨'," >> reminder.py
+          echo "            '花一點點時間清潔，也是在照顧自己'," >> reminder.py
+          echo "            '穩穩的生活習慣，從牙刷開始 ♡'," >> reminder.py
+          echo "            '給自己一點節奏，從牙齒開始清理'," >> reminder.py
+          echo "            '這是一個讓自己回到軌道的小動作'," >> reminder.py
+          echo "            '刷牙是一種整理，也是種重新出發'" >> reminder.py
+          echo "        ]," >> reminder.py
+          echo "        'concerned': [" >> reminder.py
+          echo "            '情緒跟不上也沒關係，刷牙當作切換模式'," >> reminder.py
+          echo "            '即使累也讓口腔舒服一點，自己會比較放鬆'," >> reminder.py
+          echo "            '這時候先照顧好口腔，會幫助你慢慢醒來'," >> reminder.py
+          echo "            '累的時候就從最小的行動開始，像是刷牙'," >> reminder.py
+          echo "            '你可以照自己的節奏刷牙，不急'," >> reminder.py
+          echo "            '刷牙是一個不需要決定太多的安靜小事'," >> reminder.py
+          echo "            '把注意力放在泡沫和水流，給自己一點喘息'," >> reminder.py
+          echo "            '這是屬於你自己的照顧時間'," >> reminder.py
+          echo "            '讓這幾分鐘單純一點，只刷牙就好'" >> reminder.py
+          echo "        ]" >> reminder.py
+          echo "    }," >> reminder.py
+          echo "    'exercise': {" >> reminder.py
+          echo "        'gentle': [" >> reminder.py
+          echo "            '今天不用多，三分鐘踏步也夠意思 ✦'," >> reminder.py
+          echo "            '你不需要做太多，三分鐘的踏步機就好 ✧'," >> reminder.py
+          echo "            '小步也能走出節奏，上踏步機動一下吧～'," >> reminder.py
+          echo "            '就當幫自己啟動身體，只要三分鐘也好'," >> reminder.py
+          echo "            '從踏步機慢慢踩起來，不用追求厲害 ✦'," >> reminder.py
+          echo "            '簡單踩幾分鐘，身體會回應你 ✨'," >> reminder.py
+          echo "            '當成活動小儀式也行～只要你願意站上去'," >> reminder.py
+          echo "            '今天也給身體一點回應，踏步機上見 ♡'," >> reminder.py
+          echo "            '走一小段，給身體一點提示也不錯'," >> reminder.py
+          echo "            '輕輕踩一下，不用負擔，也能啟動一點能量'" >> reminder.py
+          echo "        ]," >> reminder.py
+          echo "        'neutral': [" >> reminder.py
+          echo "            '今天是運動時間，記得上踏步機踩一下 ✦'," >> reminder.py
+          echo "            '準備開始動一動囉～三分鐘就好沒壓力'," >> reminder.py
+          echo "            '你可以做到的，來～走起來吧'," >> reminder.py
+          echo "            '有踏步機在，不如利用一下踩一波 ✧'," >> reminder.py
+          echo "            '每天一點點，也能累積出健康✨'," >> reminder.py
+          echo "            '運動日到了～讓踏步機幫你出個力'," >> reminder.py
+          echo "            '即使只有三分鐘，身體也會記得你的努力'," >> reminder.py
+          echo "            '幫自己踩個節奏，輕鬆不費力 ♫'," >> reminder.py
+          echo "            '你願意開始，就已經是好事'" >> reminder.py
+          echo "        ]," >> reminder.py
+          echo "        'concerned': [" >> reminder.py
+          echo "            '三分鐘可以嗎？只是簡單讓身體動起來'," >> reminder.py
+          echo "            '你狀況不一定好，但踏步機會陪你慢慢來'," >> reminder.py
+          echo "            '連續不動會讓人更累，我們就從機器開始'," >> reminder.py
+          echo "            '即使身體很重，踩幾下也算照顧自己'," >> reminder.py
+          echo "            '你不需要拼，只要願意站上去，就是行動'," >> reminder.py
+          echo "            '不是訓練，只是讓身體知道你還在乎他'," >> reminder.py
+          echo "            '動不了也沒關係，我們只做這一小段就停'," >> reminder.py
+          echo "            '三分鐘是你能掌握的小步伐'," >> reminder.py
+          echo "            '願意開始動一下，就很值得肯定'," >> reminder.py
+          echo "            '今天也能有屬於自己的節奏，從踏步機開始'" >> reminder.py
+          echo "        ]" >> reminder.py
+          echo "    }" >> reminder.py
           echo "}" >> reminder.py
+          echo "" >> reminder.py
           echo "options = reminders.get(task, {}).get(tone_type, [])" >> reminder.py
-          echo "print('--- 今日提醒 ---')" >> reminder.py
-          echo "print(random.choice(options))" >> reminder.py
+          echo "print('[debug] 語氣：', tone_type)" >> reminder.py
+          echo "print('[debug] 任務：', task)" >> reminder.py
+          echo "if options:" >> reminder.py
+          echo "    print('\\n--- 今日提醒 ---')" >> reminder.py
+          echo "    print(random.choice(options))" >> reminder.py
+          echo "else:" >> reminder.py
+          echo "    print('⚠️ 無對應提醒語句')" >> reminder.py
 
       - name: Run reminder
         run: python3 reminder.py
