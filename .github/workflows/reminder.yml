@@ -1,13 +1,38 @@
-name: Minimal Test
+name: Safe Daily Reminder
 
 on:
   workflow_dispatch:
 
 jobs:
-  test:
+  remind:
     runs-on: ubuntu-latest
     steps:
-      - name: Write & Run Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Create reminder script
         run: |
-          echo 'print("✅ 成功執行 Python")' > test.py
-          python3 test.py
+          echo "import random" >> reminder.py
+          echo "import datetime" >> reminder.py
+          echo "tone_type = 'gentle'" >> reminder.py
+          echo "task = 'brush'" >> reminder.py
+          echo "reminders = {" >> reminder.py
+          echo "  'brush': {" >> reminder.py
+          echo "    'gentle': ['開始一天之前，先讓口氣也醒來 ✦']," >> reminder.py
+          echo "    'neutral': ['去刷個牙再開始你要做的事吧！']," >> reminder.py
+          echo "    'concerned': ['情緒跟不上也沒關係，刷牙當作切換模式']" >> reminder.py
+          echo "  }," >> reminder.py
+          echo "  'exercise': {" >> reminder.py
+          echo "    'gentle': ['今天不用多，三分鐘踏步也夠意思 ✦']," >> reminder.py
+          echo "    'neutral': ['你可以做到的，來～走起來吧']," >> reminder.py
+          echo "    'concerned': ['三分鐘可以嗎？只是簡單讓身體動起來']" >> reminder.py
+          echo "  }" >> reminder.py
+          echo "}" >> reminder.py
+          echo "options = reminders.get(task, {}).get(tone_type, [])" >> reminder.py
+          echo "print('--- 今日提醒 ---')" >> reminder.py
+          echo "print(random.choice(options))" >> reminder.py
+
+      - name: Run reminder
+        run: python3 reminder.py
