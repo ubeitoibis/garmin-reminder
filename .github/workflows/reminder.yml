@@ -49,23 +49,23 @@ jobs:
                     files = sorted(glob.glob('processed/*.json'), key=os.path.getmtime, reverse=True)
           latest = files[0] if files else None
 
-          tone_type = ''
-if latest:
-    with open(latest, 'r', encoding='utf-8') as f:
+                    tone_type = ''
+          if latest:
+              with open(latest, 'r', encoding='utf-8') as f:
         data = json.load(f)
-              total = data.get('sleep_summary', {}).get('total_sleep', 0)
-    if total >= 25200:
-        tone_type = 'gentle'
-    elif total >= 18000:
-        tone_type = 'neutral'
-    else:
-        tone_type = 'concerned'
+                  total = data.get('sleep_summary', {}).get('total_sleep', 0)
+              if total >= 25200:
+                  tone_type = 'gentle'
+              elif total >= 18000:
+                  tone_type = 'neutral'
+              else:
+                  tone_type = 'concerned'
 
           print('語氣分類為：' + tone_type)
 
           # 根據時間判斷提醒項目
-          now = datetime.utcnow().strftime('%H:%M')
-    if now in ['23:00', '00:00', '12:00']:
+                              now = datetime.utcnow().strftime('%H:%M')
+                    if now in ['23:00', '00:00', '12:00']:
               task = 'brush'
           elif now in ['10:45', '01:30']:
               task = 'exercise'
