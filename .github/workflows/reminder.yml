@@ -1,4 +1,4 @@
-name: Test Script
+name: Minimal Test
 
 on:
   workflow_dispatch:
@@ -7,9 +7,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate test script
+      - name: Write & Run Python
         run: |
-          cat <<EOF > test.py
-print("✅ 成功產生並執行 Python 腳本")
-EOF
+          echo 'print("✅ 成功執行 Python")' > test.py
           python3 test.py
