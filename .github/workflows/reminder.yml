@@ -1,99 +1,15 @@
-name: Daily Reminders with Randomized Tone
+name: Minimal Python Test
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 23 * * 0,1,3,4,5'
-    - cron: '0 0 * * 2,6'
-    - cron: '0 12 * * *'
-    - cron: '45 10 * * 0,1,3,4,5'
-    - cron: '30 1 * * 2,6'
 
 jobs:
-  remind:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: python3 -m pip install openai
-
-      - name: Create mock sleep data
+      - name: Run test Python script
         run: |
-          mkdir -p processed
-          echo '{
-            "date": "2025-04-20",
-            "sleep_summary": {
-              "deep": 12300,
-              "light": 22920,
-              "rem": 7260,
-              "awake": 12360,
-              "total_sleep": 54840
-            }
-          }' > processed/mock_sleep.json
-
-      - name: Generate randomized reminder
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          cat <<EOF > script.py
-import os, json, glob
-from datetime import datetime
-import random
-
-files = sorted(glob.glob('processed/*.json'), key=os.path.getmtime, reverse=True)
-latest = files[0] if files else None
-
-tone_type = ''
-if latest:
-    with open(latest, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        total = data.get('sleep_summary', {}).get('total_sleep', 0)
-    if total >= 25200:
-        tone_type = 'gentle'
-    elif total >= 18000:
-        tone_type = 'neutral'
-    else:
-        tone_type = 'concerned'
-
-print('語氣分類為：' + tone_type)
-print('[debug] tone_type:', tone_type)
-
-now = datetime.utcnow().strftime('%H:%M')
-if now in ['23:00', '00:00', '12:00']:
-    task = 'brush'
-elif now in ['10:45', '01:30']:
-    task = 'exercise'
-else:
-    task = 'unknown'
-print('[debug] task:', task)
-
-reminders = {
-    "brush": {
-        "gentle": ["開始一天之前，先讓口氣也醒來 ✦"],
-        "neutral": ["去刷個牙再開始你要做的事吧！"],
-        "concerned": ["情緒跟不上也沒關係，刷牙當作切換模式"]
-    },
-    "exercise": {
-        "gentle": ["今天不用多，三分鐘踏步也夠意思 ✦"],
-        "neutral": ["你可以做到的，來～走起來吧"],
-        "concerned": ["三分鐘可以嗎？只是簡單讓身體動起來"]
-    }
-}
-
-options = reminders.get(task, {}).get(tone_type, [])
-print('[debug] 選項數量:', len(options))
-if options:
-    print('\\n--- 今日提醒 ---')
-    print(random.choice(options))
-else:
-    print('⚠️ 無對應提醒語句')
-    exit(1)
+          cat <<EOF > test.py
+print("✅ Python 腳本成功執行")
 EOF
-          python3 script.py
+          python3 test.py
