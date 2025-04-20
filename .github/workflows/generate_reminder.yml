@@ -17,6 +17,12 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Check Python version and random module
+        run: |
+          python --version
+          python -c "import random; print('Random module is working')"
+          python -c "print(random.choice([1, 2, 3]))"  # 隨機選擇一個數字來確保 random 模組工作正常
+
       - name: Install ICS module
         run: pip install ics
 
