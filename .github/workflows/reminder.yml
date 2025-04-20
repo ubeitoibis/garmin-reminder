@@ -46,7 +46,7 @@ jobs:
           import os, json, glob
           from datetime import datetime
 
-files = sorted(glob.glob('processed/*.json'), key=os.path.getmtime, reverse=True)
+          files = sorted(glob.glob('processed/*.json'), key=os.path.getmtime, reverse=True)
 latest = files[0] if files else None
 
 tone_type = ''
