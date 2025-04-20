@@ -28,7 +28,7 @@ jobs:
       - name: Generate reminder.ics
         run: |
           mkdir -p public
-          python3 <<EOF
+          python <<EOF
 import random
 from datetime import datetime, timedelta
 from ics import Calendar, Event
