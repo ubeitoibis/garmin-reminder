@@ -142,6 +142,6 @@ if not options:
     print('⚠️ 無提醒語句可用。')
 else:
     chosen = random.choice(options)
-    print('\n--- 今日提醒 ---')
+    print('\\n--- 今日提醒 ---')
     print(f'{chosen}{suggestion}')
 EOF
