@@ -45,6 +45,7 @@ jobs:
           cat <<EOF > script.py
 import os, json, glob
 from datetime import datetime
+import random
 
 files = sorted(glob.glob('processed/*.json'), key=os.path.getmtime, reverse=True)
 latest = files[0] if files else None
@@ -149,7 +150,6 @@ reminders = {
     }
 }
 
-import random
 options = reminders.get(task, {}).get(tone_type, [])
 print('[debug] 選項數量:', len(options))
 if options:
