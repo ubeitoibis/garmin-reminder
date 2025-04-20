@@ -1,0 +1,3 @@
+# 忽略 Garmin 真實資料
+processed/*.json
+!processed/mock_sleep.json
