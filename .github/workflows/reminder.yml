@@ -62,6 +62,7 @@ jobs:
                   tone_type = 'concerned'
 
           print('語氣分類為：' + tone_type)
+          print('[debug] tone_type:', tone_type)
 
           # 根據時間判斷提醒項目
                               now = datetime.utcnow().strftime('%H:%M')
@@ -71,6 +72,7 @@ jobs:
               task = 'exercise'
           else:
               task = 'unknown'
+          print('[debug] task:', task)
 
           # 建立提醒語句（示意版）
           reminders = {
@@ -151,10 +153,12 @@ jobs:
 
           import random
           options = reminders.get(task, {}).get(tone_type, [])
+          print('[debug] 選項數量:', len(options))
           if options:
               print('\n--- 今日提醒 ---')
               print(random.choice(options))
           else:
               print('⚠️ 無對應提醒語句')
+              exit(1)
           EOF
           python3 script.py
