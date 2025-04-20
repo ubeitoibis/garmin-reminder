@@ -1,6 +1,7 @@
 name: Daily Reminders with Randomized Tone
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 23 * * 0,1,3,4,5'  # 平日早上 7 點
     - cron: '0 0 * * 2,6'         # 假日早上 8 點
