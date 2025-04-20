@@ -135,13 +135,13 @@ weekday = datetime.utcnow().weekday()
 is_holiday = weekday in [2, 6]
 
 if task == 'exercise' and is_holiday and tone_type == 'gentle':
-    suggestion = '\n（你今天狀況不錯，要不要考慮用一下健身環？）'
+    suggestion = '\\n（你今天狀況不錯，要不要考慮用一下健身環？）'
 else:
     suggestion = ''
 
 options = reminders.get(task, {}).get(tone_type, [])
 if not options:
-    print('\n--- 今日提醒 ---')
+    print('\\n--- 今日提醒 ---')
 else:
     chosen = random.choice(options)
     print('\n--- 今日提醒 ---')
