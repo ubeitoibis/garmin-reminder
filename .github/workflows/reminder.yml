@@ -24,12 +24,26 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install openai
 
+      - name: Create mock sleep data
+        run: |
+          mkdir -p processed
+          echo '{
+            "date": "2025-04-20",
+            "sleep_summary": {
+              "deep": 12300,
+              "light": 22920,
+              "rem": 7260,
+              "awake": 12360,
+              "total_sleep": 54840
+            }
+          }' > processed/mock_sleep.json
+
       - name: Generate randomized reminder
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cat <<EOF > script.py
-import os, json, glob, openai, random
+import os, json, glob
 from datetime import datetime
 
 files = sorted(glob.glob('processed/*.json'), key=os.path.getmtime, reverse=True)
@@ -47,41 +61,6 @@ if latest:
     else:
         tone_type = 'concerned'
 
-now = datetime.utcnow().strftime('%H:%M')
-if now in ['23:00', '00:00', '12:00']:
-    task = 'brush'
-elif now in ['10:45', '01:30']:
-    task = 'exercise'
-else:
-    task = 'unknown'
-
-reminders = {
-  "brush": {
-    "gentle": ["記得刷牙"],
-    "neutral": ["刷牙囉～"],
-    "concerned": ["先去把牙齒處理一下"]
-  },
-  "exercise": {
-    "gentle": ["記得簡單踩個踏步機 ✦"],
-    "neutral": ["今天要踩踏步囉！"],
-    "concerned": ["三分鐘也可以，慢慢來"]
-  }
-}
-
-weekday = datetime.utcnow().weekday()
-is_holiday = weekday in [2, 6]
-
-if task == 'exercise' and is_holiday and tone_type == 'gentle':
-    suggestion = '\\n（你今天狀況不錯，要不要考慮用一下健身環？）'
-else:
-    suggestion = ''
-
-options = reminders.get(task, {}).get(tone_type, [])
-if not options:
-    print('⚠️ 無提醒語句可用。')
-else:
-    chosen = random.choice(options)
-    print('\\n--- 今日提醒 ---')
-    print(f'{chosen}{suggestion}')
+print('語氣分類為：' + tone_type)
 EOF
-  python3 script.py
+          python3 script.py
