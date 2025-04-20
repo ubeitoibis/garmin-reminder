@@ -43,7 +43,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cat <<EOF > script.py
-import os, json, glob
+          import os, json, glob
 from datetime import datetime
 
 files = sorted(glob.glob('processed/*.json'), key=os.path.getmtime, reverse=True)
@@ -61,6 +61,6 @@ if latest:
     else:
         tone_type = 'concerned'
 
-print('語氣分類為：' + tone_type)
-EOF
-python3 script.py
+          print('語氣分類為：' + tone_type)
+          EOF
+          python3 script.py
