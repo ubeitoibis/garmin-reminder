@@ -1,0 +1,11 @@
+name: Test Reminder
+
+on:
+  workflow_dispatch:
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello
+        run: echo "✅ Workflow 成功執行"
