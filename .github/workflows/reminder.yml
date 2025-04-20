@@ -84,4 +84,4 @@ else:
     print('\\n--- 今日提醒 ---')
     print(f'{chosen}{suggestion}')
 EOF
-          python3 script.py
+  python3 script.py
