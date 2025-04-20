@@ -1,4 +1,4 @@
-- name: Check Python version and random module
+name: Check Python and Random module
   run: |
-    python --version
-    python -c "import random; print('Random module is working')"
+    python3 --version
+    python3 -c "import random; print('Random module is working')"
