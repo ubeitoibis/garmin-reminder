@@ -62,5 +62,5 @@ if latest:
         tone_type = 'concerned'
 
 print('語氣分類為：' + tone_type)
-EOF
-python3 script.py
+  EOF
+  python3 script.py
