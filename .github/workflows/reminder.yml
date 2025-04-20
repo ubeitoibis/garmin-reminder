@@ -57,7 +57,14 @@ else:
 
 reminders = {
   "brush": {
-    "gentle": ["記得刷牙"]
+    "gentle": ["記得刷牙"],
+    "neutral": ["刷牙囉～"],
+    "concerned": ["先去把牙齒處理一下"]
+  },
+  "exercise": {
+    "gentle": ["記得簡單踩個踏步機 ✦"],
+    "neutral": ["今天要踩踏步囉！"],
+    "concerned": ["三分鐘也可以，慢慢來"]
   }
 }
 
@@ -71,10 +78,10 @@ else:
 
 options = reminders.get(task, {}).get(tone_type, [])
 if not options:
-    print('\\n--- 今日提醒 ---')
+    print('⚠️ 無提醒語句可用。')
 else:
     chosen = random.choice(options)
     print('\\n--- 今日提醒 ---')
     print(f'{chosen}{suggestion}')
 EOF
-  python3 script.py
+          python3 script.py
