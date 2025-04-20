@@ -20,7 +20,7 @@ jobs:
       - name: Check Python version and random module
         run: |
           python --version
-          python -c "import random; print(random.choice([1, 2, 3]))"
+          python -c "import random; print('Random module is working')"
 
       - name: Install ICS module
         run: pip install ics
