@@ -63,4 +63,4 @@ if latest:
 
 print('語氣分類為：' + tone_type)
 EOF
-  python3 script.py
+python3 script.py
